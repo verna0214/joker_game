@@ -1,4 +1,5 @@
 import random
+from collections import Counter
 
 def initialize_deck():
   # Initialize cards
@@ -25,8 +26,8 @@ def check_pairs(players_hand):
   pairs = []
   values = [ card[1] for card in players_hand if card[0] != "Joker" ]
   
-  for value in set(values):
-    count = values.count(value)
+  value_counts = Counter(values)
+  for value, count in value_counts.items():
     if count >= 2:
       pair_cards = [card for card in players_hand if card[1] == value][:count - (count % 2)]
       pairs.extend(pair_cards)
@@ -104,8 +105,6 @@ def main():
         return
       
       players_card[i].append(remove_card)
-      # shuffle cards again
-      random.shuffle(players_card[i])
 
       pairs = check_pairs(players_card[i])
       if pairs:
