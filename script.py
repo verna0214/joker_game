@@ -39,10 +39,17 @@ def check_pairs(players_hand):
 
 def main():
   # Initialize players
-  num_players = int(input("Please enter the number of players: "))
-
-  while num_players < 2 or num_players > 4:
-    num_players = int(input("Number of players is limited to 2 to 4 people!\nPlease enter again: "))
+  while True:
+    try:
+      num_players = int(input("Please enter the number of players (2-4): "))
+      
+      if 2 <= num_players <= 4:
+        break
+      else:
+        print("Number of players is limited to 2 to 4 people. Please enter again!")
+    
+    except ValueError:
+      print("Invalid input. Please enter a valid number between 2 and 4.")
   
   print("OK. Now please enter player name in sequence.")
   name_players = []
