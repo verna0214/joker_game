@@ -1,3 +1,5 @@
+import random
+
 def initialize_deck():
   # Initialize cards
   suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
@@ -5,8 +7,19 @@ def initialize_deck():
   deck = [(suit, value) for suit in suits for value in values]
   # Add 1 joker
   deck.extend([("Joker", "Black")])
+  # random cards
+  random.shuffle(deck)
 
   return deck
+
+def deal_cards(cards, num_players):
+  # deal out cards to players
+  players_cards = [ [] for _ in range(num_players) ]
+
+  for i in range(len(cards)):
+    players_cards[i % num_players].append(cards[i])
+  
+  return players_cards
 
 def main():
   # Initialize players
@@ -20,6 +33,7 @@ def main():
   print(name_players)
 
   deck = initialize_deck()
+  players_card = deal_cards(deck, num_players)
 
 
 if __name__ == "__main__":
