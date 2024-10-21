@@ -37,20 +37,20 @@ def check_pairs(players_hand):
   
   return pairs
 
+def get_valid_number(prompt, min_val, max_val):
+    while True:
+        try:
+            num = int(input(prompt))
+            if min_val <= num <= max_val:
+                return num
+            else:
+                print(f"Please enter a number between {min_val} and {max_val}.")
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
 
 def main():
   # Initialize players
-  while True:
-    try:
-      num_players = int(input("Please enter the number of players (2-4): "))
-      
-      if 2 <= num_players <= 4:
-        break
-      else:
-        print("Number of players is limited to 2 to 4 people. Please enter again!")
-    
-    except ValueError:
-      print("Invalid input. Please enter a valid number between 2 and 4.")
+  num_players = get_valid_number("Please enter the number of players (2-4): ", 2, 4)
   
   print("OK. Now please enter player name in sequence.")
   name_players = []
@@ -86,19 +86,8 @@ def main():
     for i in range(num_players):
       opponent_cards = players_card[(i + 1) % num_players]
 
-      while True:
-        try:
-          opponent_idx = int(input(f"Hi, {name_players[i]}! Your next player has {len(opponent_cards)} card(s).\nPlease enter which card do you want (1-{len(opponent_cards)}): ")) - 1
-          
-          # check index
-          if 0 <= opponent_idx < len(opponent_cards):
-            break
-          else:
-            print(f"Invalid number. Please choose a number between 1 and {len(opponent_cards)}.")
-        except ValueError:
-          # catch value error
-          print("Invalid input. Please enter a valid number.")
-
+      opponent_idx = get_valid_number(f"Hi, {name_players[i]}! Your next player has {len(opponent_cards)} card(s).\nPlease enter which card do you want (1-{len(opponent_cards)}): ", 1, len(opponent_cards)) - 1
+      
       remove_card = opponent_cards.pop(opponent_idx)
       if len(opponent_cards) == 0:
         print(f"Game is finished! Winner is {name_players[(i + 1) % num_players]} !!")
