@@ -45,7 +45,16 @@ def main():
     num_players = int(input("Number of players is limited to 2 to 4 people!\nPlease enter again: "))
   
   print("OK. Now please enter player name in sequence.")
-  name_players = [str(input(f"{i}: ")) for i in range(1, num_players + 1)]
+  name_players = []
+
+  for i in range(1, num_players + 1):
+    name = input(f"Enter name for player {i}: ").strip()
+    # check space
+    while not name:
+      name = input(f"Name cannot be empty. Please enter a valid name for player {i}: ").strip()
+    
+    name_players.append(name)
+  print(f"Here is players' name: {name_players}")
 
   # Deal with cards
   deck = initialize_deck()
@@ -68,24 +77,36 @@ def main():
 
     for i in range(num_players):
       opponent_cards = players_card[(i + 1) % num_players]
-      print(f"Opponent_cards is: {opponent_cards}")
-      opponent_idx = int(input(f"Hi, {name_players[i]}! Your next player has {len(opponent_cards)} card(s).\nPlease enter which card do you want? ")) - 1
-      while opponent_idx < 0 or opponent_idx >= len(opponent_cards):
-        opponent_idx = int(input(f"Out of range. Please choose again: ")) - 1
-      
-      print(f"oppnent_idx: {opponent_idx}")
+
+      while True:
+        try:
+          opponent_idx = int(input(f"Hi, {name_players[i]}! Your next player has {len(opponent_cards)} card(s).\nPlease enter which card do you want (1-{len(opponent_cards)}): ")) - 1
+          
+          # check index
+          if 0 <= opponent_idx < len(opponent_cards):
+            break
+          else:
+            print(f"Invalid number. Please choose a number between 1 and {len(opponent_cards)}.")
+        except ValueError:
+          # catch value error
+          print("Invalid input. Please enter a valid number.")
+
       remove_card = opponent_cards.pop(opponent_idx)
       if len(opponent_cards) == 0:
         print(f"Game is finished! Winner is {name_players[(i + 1) % num_players]} !!")
         return
+      
       players_card[i].append(remove_card)
+      # shuffle cards again
+      random.shuffle(players_card[i])
+
       pairs = check_pairs(players_card[i])
       if pairs:
         print(f"{name_players[i]} throws out the pairs: {pairs}")
         if len(players_card[i]) == 0:
           print(f"Game is finished! Winner is {name_players[i]} !!")
           return
-    
+  
     current_round += 1
 
 if __name__ == "__main__":
