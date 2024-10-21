@@ -21,6 +21,22 @@ def deal_cards(cards, num_players):
   
   return players_cards
 
+def check_pairs(players_hand):
+  pairs = []
+  values = [ card[1] for card in players_hand if card[0] != "Joker" ]
+  
+  for value in set(values):
+    count = values.count(value)
+    if count >= 2:
+      pair_cards = [card for card in players_hand if card[1] == value][:count - (count % 2)]
+      pairs.extend(pair_cards)
+
+  for pair in pairs:
+    players_hand.remove(pair)
+  
+  return pairs
+
+
 def main():
   # Initialize players
   num_players = int(input("Please enter the number of players: "))
@@ -30,10 +46,19 @@ def main():
   
   print("OK. Now please enter player name in sequence.")
   name_players = [str(input(f"{i}: ")) for i in range(1, num_players + 1)]
-  print(name_players)
 
+  # Deal with cards
   deck = initialize_deck()
   players_card = deal_cards(deck, num_players)
+
+  # check pairs first
+  for i in range(num_players):
+    pairs = check_pairs(players_card[i])
+    if pairs:
+      print(f"{name_players[i]} throws out the pairs: {pairs}")
+      if len(players_card[i]) == 0:
+        print(f"Game is finished! Winner is {name_players[i]}.")
+        return
 
 
 if __name__ == "__main__":
