@@ -57,9 +57,36 @@ def main():
     if pairs:
       print(f"{name_players[i]} throws out the pairs: {pairs}")
       if len(players_card[i]) == 0:
-        print(f"Game is finished! Winner is {name_players[i]}.")
+        print(f"Game is finished! Winner is {name_players[i]} !!")
         return
+      
+  # Game start
+  current_round = 1
 
+  while True:
+    print(f"--- ROUND {current_round} ---")
+
+    for i in range(num_players):
+      opponent_cards = players_card[(i + 1) % num_players]
+      print(f"Opponent_cards is: {opponent_cards}")
+      opponent_idx = int(input(f"Hi, {name_players[i]}! Your next player has {len(opponent_cards)} card(s).\nPlease enter which card do you want? ")) - 1
+      while opponent_idx < 0 or opponent_idx >= len(opponent_cards):
+        opponent_idx = int(input(f"Out of range. Please choose again: ")) - 1
+      
+      print(f"oppnent_idx: {opponent_idx}")
+      remove_card = opponent_cards.pop(opponent_idx)
+      if len(opponent_cards) == 0:
+        print(f"Game is finished! Winner is {name_players[(i + 1) % num_players]} !!")
+        return
+      players_card[i].append(remove_card)
+      pairs = check_pairs(players_card[i])
+      if pairs:
+        print(f"{name_players[i]} throws out the pairs: {pairs}")
+        if len(players_card[i]) == 0:
+          print(f"Game is finished! Winner is {name_players[i]} !!")
+          return
+    
+    current_round += 1
 
 if __name__ == "__main__":
   main()
